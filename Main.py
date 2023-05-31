@@ -1,6 +1,6 @@
 import tkinter as tk
-from Maze import Maze
-import Cell
+from src.models.Maze import Maze
+from src.models.Cell import Cell
 
 
 window = tk.Tk()
