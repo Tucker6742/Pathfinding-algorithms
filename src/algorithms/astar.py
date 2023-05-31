@@ -4,39 +4,42 @@ from ..models.Maze import Maze
 
 class A_star_search:
     def search(maze: Maze):
-        start: Cell = maze.starting_point
-        end: Cell = maze.ending_point
+        start: Cell = Cell(maze.starting_point[0], maze.starting_point[1])
+        end: Cell = Cell(maze.ending_point[0], maze.ending_point[1])
 
         # queue: (g, h, f)
         # g: distance from start
         # h: heuristic to end
         # f: g + h
-        queue: dict[Cell:tuple[int, int, int]] = {}
-        queue[start] = (0, A_star_search.heuristic(start, end),
-                        A_star_search.heuristic(start, end))
-        visited: list[Cell] = []
+        with open("astar.txt", "w") as file:
+            queue: dict[Cell:tuple[int, int, int]] = {}
+            queue[start] = (0, A_star_search.heuristic(start, end),
+                            A_star_search.heuristic(start, end))
+            visited: list[Cell] = []
 
-        while queue:
-            current = queue.popitem()[0]
-            print(f"{current.parent}->{current}:{A_star_search.heuristic(current, end)}")
-            visited.append(current)
-            if current == end:
-                return A_star_search.reconstruct_path(maze, current)
+            while queue:
+                current = queue.popitem()[0]
+                file.write(
+                    f"{current.parent}->{current}:{A_star_search.heuristic(current, end)}\n")
+                file.write(f"{visited=}\n\n")
+                visited.append(current)
+                if current == end:
+                    return A_star_search.reconstruct_path(maze, current)
 
-            for neighbor in A_star_search.get_neighbors(maze, current):
-                if neighbor.coordinate() in map(Cell.coordinate,visited):
-                    continue
-                g = A_star_search.heuristic(start, neighbor)
-                h = A_star_search.heuristic(neighbor, end)
-                f = g + h
-                if neighbor.coordinate() not in list(map(lambda x: x.coordinate,queue.keys())):
-                    neighbor.setParent(current)
-                    queue[neighbor] = (g, h, f)
-                elif queue[neighbor][2] < f:
-                    queue[neighbor] = (g, h, f)
-            queue = A_star_search.sorted_dict(queue)
-            
-        return None, visited
+                for neighbor in A_star_search.get_neighbors(maze, current):
+                    if neighbor.coordinate() in map(Cell.coordinate, visited):
+                        continue
+                    g = (neighbor.parent.cost + 1)
+                    h = A_star_search.heuristic(neighbor, end)
+                    f = g + h
+                    if neighbor.coordinate() not in list(map(lambda x: x.coordinate, queue.keys())):
+                        neighbor.setParent(current)
+                        queue[neighbor] = (g, h, f)
+                    elif queue[neighbor][2] < f:
+                        queue[neighbor] = (g, h, f)
+                queue = A_star_search.sorted_dict(queue)
+                file.write(f"{queue=}\n\n\n")
+            return None, visited
 
     @staticmethod
     def sorted_dict(dict_point: dict[Cell:int]):

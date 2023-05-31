@@ -32,6 +32,6 @@ for coordinate_y in range(maze.height):
         if maze.cells[coordinate_y][coordinate_x].x == maze.ending_point[1] and maze.cells[coordinate_y][coordinate_x].y == maze.ending_point[0]:
             cell.configure(bg = "#ED1C24")
         cell.place(x = maze.cells[coordinate_y][coordinate_x].x*30, y = maze.cells[coordinate_y][coordinate_x].y*30, width = 30, height = 30)
-window.mainloop()
+# window.mainloop()
 path, visited = A_star_search.search(maze)
 print(path)
