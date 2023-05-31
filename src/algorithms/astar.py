@@ -1,13 +1,11 @@
-from typing import Tuple
 from ..models.Cell import Cell
 from ..models.Maze import Maze
 
 
 class A_star_search:
-    def search(maze: Maze) -> Tuple[list[Cell] | None, list[Cell]]:
-        start: Cell = Cell(maze.starting_point[0], maze.starting_point[1])
-        end: Cell = Cell(maze.ending_point[0], maze.ending_point[1])
-        start.setParent(None)
+    def search(maze: Maze):
+        start: Cell = maze.starting_point
+        end: Cell = maze.ending_point
 
         # queue: (g, h, f)
         # g: distance from start
@@ -23,7 +21,7 @@ class A_star_search:
             print(f"{current.parent}->{current}:{A_star_search.heuristic(current, end)}")
             visited.append(current)
             if current == end:
-                return A_star_search.reconstruct_path(maze, current), visited
+                return A_star_search.reconstruct_path(maze, current)
 
             for neighbor in A_star_search.get_neighbors(maze, current):
                 if neighbor.coordinate() in map(Cell.coordinate,visited):
