@@ -1,5 +1,5 @@
 import random
-from Cell import Cell
+from .Cell import Cell
 
 class Maze:
     def __init__(self):
