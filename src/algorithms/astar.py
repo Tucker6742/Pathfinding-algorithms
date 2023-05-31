@@ -5,8 +5,9 @@ from ..models.Maze import Maze
 
 class A_star_search:
     def search(maze: Maze) -> Tuple[list[Cell] | None, list[Cell]]:
-        start: Cell = maze.starting_point
-        end: Cell = maze.ending_point
+        start: Cell = Cell(maze.starting_point[0], maze.starting_point[1])
+        end: Cell = Cell(maze.ending_point[0], maze.ending_point[1])
+        start.setParent(None)
 
         # queue: (g, h, f)
         # g: distance from start
