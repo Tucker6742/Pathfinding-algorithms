@@ -20,7 +20,8 @@ class Maze:
         self.ending_point = [y, x]
 
     def randomizeMaze(self):
-        self.randomizeMazeDepthFirst()
+        self.createPath()
+        self.batchChangeStatus()
 
     def deletePath(self, starting_rank, ending_rank):
         for y in range(self.height):
@@ -61,22 +62,22 @@ class Maze:
                         possible_moves.remove("e")
                     except:
                         pass
-                if self.x == 0:
+                if self.x == 1:
                     try:
                         possible_moves.remove("w")
                     except:
                         pass
-                if self.x == maze.width - 1:
+                if self.x == maze.width - 2:
                     try:
                         possible_moves.remove("e")
                     except:
                         pass
-                if self.y == 0:
+                if self.y == 1:
                     try:
                         possible_moves.remove("n")
                     except:
                         pass
-                if self.y == maze.height - 1:
+                if self.y == maze.height - 2:
                     try:
                         possible_moves.remove("s")
                     except:
@@ -115,6 +116,9 @@ class Maze:
     def batchChangeStatus(self):
         for y in range(self.height):
             for x in range(self.width):
+                if x == 0 or y == 0 or x == (self.width - 1) or y == (self.height - 1):
+                    self.cells[y][x].changeStatus(1)
+                    continue
                 if self.cells[y][x].rank == 0:
                     self.cells[y][x].changeStatus(2)
                     continue
