@@ -2,8 +2,8 @@
 Comsider maze as an 1D array of cells.
 """
 
-import Cell.Cell #Assume there is a class called Cell
-import Maze.Maze #Assume there is a class called Maze
+from  ..models.Cell import Cell #Assume there is a class called Cell
+from ..models.Maze import Maze #Assume there is a class called Maze
 from Dijkstra import Dijkstra
 
 
