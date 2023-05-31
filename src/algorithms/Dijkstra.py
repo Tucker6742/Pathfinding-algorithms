@@ -2,12 +2,12 @@
 Comsider maze as an 1D array of cells.
 """
 
-from  ..models.Cell import Cell #Assume there is a class called Cell
+from ..models.Cell import Cell #Assume there is a class called Cell
 from ..models.Maze import Maze #Assume there is a class called Maze
 from Dijkstra import Dijkstra
 
 
-class DijkstraCell(Cell): #Inherit from Cell and add more attributes
+class My_Cell: 
     def __init__(self, 
                  x:int, 
                  y:int, 
@@ -55,19 +55,19 @@ class DijkstraCell(Cell): #Inherit from Cell and add more attributes
         - getPrevious(): return previous
         """
 
-        super().__init__(x, y)
+        self.__x = x
+        self.__y = y
         self.__state = state
         self.__distance = distance
         self.__visited = visited
         self.__weight = weight
         self.__previous = None
-        self.__visitlist = []
 
     def getCoordinates(self) -> tuple:
         """
         Return coordinate of cell
         """
-        return (self._x, self._y)
+        return (self.__x, self.__y)
 
     def getState(self) -> int:
         """
@@ -102,66 +102,59 @@ class DijkstraCell(Cell): #Inherit from Cell and add more attributes
         """ 
         return self.__visited
 
-    def setVisitlist(self, visit_cell):
-        self.__visitlist.append(visit_cell)
-
-    def getVisitlist(self):
-        return self.__visitlist
-
-    def getNeighbors(self, maze_width, maze_height) -> list[tuple]:
+    def getNeighbors(self, maze:Maze) -> list[tuple]:
         """
-        Return coordinates of neighbors of this cell
+        Return neighbors of this cell
         """
+        maze = Maze()
         neighbors = []
+        for y in maze.height:
+            for x in maze.width:
+                if x == 0: #Left edge
+                    if y == 0: #Bottom left corner
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
+                    elif y == maze.height - 1: #Top left corner
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                    else:
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
 
-        if self.__x == 0: #Left edge
-            if self.__y == 0: #Bottom left corner
-                neighbors.append((self._x + 1, self._y))
-                neighbors.append((self._x, self._y + 1))
-            elif self.__y == maze_height - 1: #Top left corner
-                neighbors.append((self._x, self._y - 1))
-                neighbors.append((self._x + 1, self._y))
-            else:
-                neighbors.append((self._x, self._y - 1))
-                neighbors.append((self._x + 1, self._y))
-                neighbors.append((self._x, self._y + 1))
-
-        elif self.__x == maze_width - 1: #Right edge
-            if self.__y == 0: #Bottom right corner
-                neighbors.append((self._x - 1, self._y))
-                neighbors.append((self._x, self._y + 1))
-            elif self.__y == maze_height - 1: #Top right corner
-                neighbors.append((self._x, self._y - 1))
-                neighbors.append((self._x - 1, self._y))
-            else:
-                neighbors.append((self._x, self._y - 1))
-                neighbors.append((self._x - 1, self._y))
-                neighbors.append((self._x, self._y + 1))
+                elif x == maze.width - 1: #Right edge
+                    if y == 0: #Bottom right corner
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
+                    elif y == maze.height - 1: #Top right corner
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                    else:
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
         
-        else:
-            if self.__y == 0: #Bottom edge
-                neighbors.append((self._x + 1, self._y))
-                neighbors.append((self._x - 1, self._y))
-                neighbors.append((self._x, self._y + 1))
-            elif self.__y == maze_height - 1: #Top edge
-                neighbors.append((self._x + 1, self._y))
-                neighbors.append((self._x - 1, self._y))
-                neighbors.append((self._x, self._y - 1))
-            else:
-                neighbors.append((self._x + 1, self._y))
-                neighbors.append((self._x - 1, self._y))
-                neighbors.append((self._x, self._y + 1))
-                neighbors.append((self._x, self._y - 1))
+                else:
+                    if y == 0: #Bottom edge
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
+                    elif y == maze.height - 1: #Top edge
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
+                    else:
+                        neighbors.append(My_Cell(x + 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x - 1, y, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y + 1, maze[y][x].status))
+                        neighbors.append(My_Cell(x, y - 1, maze[y][x].status))
 
         return neighbors
 
-    def setPrevious(self, previous_cell_coordinate) -> None:
+    def setPrevious(self, previous_cell) -> None:
         """
         Set previous cell
         """
-        previous_cell = DijkstraCell.getCell(previous_cell_coordinate[0], 
-                                             previous_cell_coordinate[1], 
-                                             Maze.getMaze())
         self.__previous = previous_cell
 
     def getPrevious(self):
@@ -170,12 +163,6 @@ class DijkstraCell(Cell): #Inherit from Cell and add more attributes
         """
         return self.__previous
 
-    @staticmethod
-    def getCell(x:int, y:int, maze:list):
-        for cell in maze:
-            if cell.getCoordinates() == (x, y):
-                dijkstra_cell = DijkstraCell(x = x, y = y, state = cell.getState(), distance = cell.getDistance())
-                return dijkstra_cell
 
 
 class Dijkstra:
@@ -197,14 +184,13 @@ class Dijkstra:
             print(end.getCoordinates())
             path.append(end.getCoordinates())
             end = end.getPrevious()
-            
             if end == start:
                 break
         path.append(start.getCoordinates())
+        path.reverse()
         print(path)
         return path
 
-    @staticmethod
     def dijkstra(maze : list, start : Cell, end : Cell) -> list[tuple]:
         """
         Finding shortest path from start to end using Dijkstra algorithm.
@@ -212,7 +198,17 @@ class Dijkstra:
             maze: 1D array of cells
             start: (x, y)
             end: (x, y)
+
+        All cells except start are set distance of infinity.
+        Weight will be added to distance of each cell when visit that cell.
         """
+
+        #Convert to my maze and my cells
+        bruh_maze = Maze()
+        maze = []
+        for y in bruh_maze.height:
+            for x in bruh_maze.width:
+                maze.append(My_Cell(x, y, maze[y][x].status))
 
         #Get maze height and width
         position = []
@@ -239,13 +235,13 @@ class Dijkstra:
             print(f'Loop : {count + 1}')
             #Get distances to neighbors
             for node in start_nodes:
-                for neighbor in node.getNeighbors(maze_width, maze_height):
-                    neighbor_node = Dijkstra.getCell(neighbor[0], neighbor[1], maze)
-                    distance = node.getDistance() + neighbor_node.getWeight()
-                    if neighbor_node.isVisited() == False and neighbor_node.getState() == 0\
-                        and neighbor_node.getDistance() > distance:
-                        neighbor_node.setDistance(node.getDistance() + neighbor_node.getWeight())
-                        neighbor_node.setPrevious(node.getCoordinates())
+                for neighbor_node in node.getNeighbors(maze_width, maze_height):
+                    distance = node.getDistance() + neighbor_node.getWeight() #Get real distance to neighbor_node
+                    if neighbor_node.isVisited() == False: #If neighbor_node is not visited 
+                        if neighbor_node.getState() == 0: #If neighbor_node is not wall
+                            if neighbor_node.getDistance() > distance: #Update distance
+                                neighbor_node.setDistance(distance)  
+                                neighbor_node.setPrevious(node) #Connect this node to start node
 
             #Clear all start_nodes
             start_nodes.clear() 
@@ -267,10 +263,10 @@ class Dijkstra:
                     node.setVisited(True)
 
             #If start_node is end, break
-            print(f'start: {start.getCoordinates()}')
-            print(f'end: {end.getCoordinates()}')
-            for start_node in start_nodes:
-                print(f'start_nodes: {start_node.getCoordinates()}')
+            #print(f'start: {start.getCoordinates()}')
+            #print(f'end: {end.getCoordinates()}')
+            #for start_node in start_nodes:
+            #    print(f'start_nodes: {start_node.getCoordinates()}')
             for start_node in start_nodes:
                 if start_node == end:
                     return Dijkstra.getPath(start, end)
