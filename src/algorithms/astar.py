@@ -44,13 +44,17 @@ class A_star_search:
         x = cell.x
         y = cell.y
         if x > 0:
-            neighbors.append(maze.cells[y][x-1])
+            if maze.cells[y][x-1].status == 0:
+                neighbors.append(maze.cells[y][x-1])
         if x < maze.width - 1:
-            neighbors.append(maze.cells[y][x+1])
+            if maze.cells[y][x-1].status == 0:
+                neighbors.append(maze.cells[y][x+1])
         if y > 0:
-            neighbors.append(maze.cells[y-1][x])
+            if maze.cells[y][x-1].status == 0:
+                neighbors.append(maze.cells[y-1][x])
         if y < maze.height - 1:
-            neighbors.append(maze.cells[y+1][x])
+            if maze.cells[y][x-1].status == 0:
+                neighbors.append(maze.cells[y+1][x])
         return neighbors
 
     @staticmethod
