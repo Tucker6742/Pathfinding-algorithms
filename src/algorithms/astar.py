@@ -4,9 +4,9 @@ from ..models.Maze import Maze
 
 class A_star_search:
     def search(maze: Maze):
-        start: Cell = Cell(maze.starting_point[0], maze.starting_point[1])
-        end: Cell = Cell(maze.ending_point[0], maze.ending_point[1])
-
+        start: Cell = Cell(maze.starting_point[1], maze.starting_point[0])
+        end: Cell = Cell(maze.ending_point[1], maze.ending_point[0])
+        # print(start.coordinate(), end.coordinate())
         # queue: (g, h, f)
         # g: distance from start
         # h: heuristic to end
@@ -20,26 +20,28 @@ class A_star_search:
             while queue:
                 current = queue.popitem()[0]
                 file.write(
-                    f"{current.parent}->{current}:{A_star_search.heuristic(current, end)}\n")
+                    f"{current.parent}->{current.coordinate()}:{A_star_search.heuristic(current, end)}\n\n")
                 file.write(f"{visited=}\n\n")
                 visited.append(current)
-                if current == end:
-                    return A_star_search.reconstruct_path(maze, current)
+                if current.coordinate() == end.coordinate():
+                    print("Found path")
+                    return A_star_search.reconstruct_path(maze, current), visited
 
                 for neighbor in A_star_search.get_neighbors(maze, current):
                     if neighbor.coordinate() in map(Cell.coordinate, visited):
                         continue
                     if neighbor.coordinate() not in list(map(lambda x: x.coordinate, queue.keys())):
                         neighbor.setParent(current)
-                        g = (neighbor.parent.cost + 1)
-                        h = A_star_search.heuristic(neighbor, end)
-                        f = g + h
-                        queue[neighbor] = (g, h, f)
-                    g = (neighbor.parent.cost + 1)
+                        new_node = True
+
+                    neighbor.cost = current.cost + 1
+                    g = neighbor.cost
                     h = A_star_search.heuristic(neighbor, end)
                     f = g + h
-                    if queue[neighbor][2] > f:
+
+                    if new_node or queue[neighbor][2] > f:
                         queue[neighbor] = (g, h, f)
+                        new_node = False
                 queue = A_star_search.sorted_dict(queue)
                 file.write(f"{queue=}\n\n\n")
             return None, visited
@@ -81,6 +83,6 @@ class A_star_search:
         while current.parent:
             path.append(current)
             current = current.parent
-        path.append(maze.starting_point)
+        path.append(Cell(maze.starting_point[1], maze.starting_point[0]))
         path.reverse()
         return path
