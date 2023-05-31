@@ -29,13 +29,16 @@ class A_star_search:
                 for neighbor in A_star_search.get_neighbors(maze, current):
                     if neighbor.coordinate() in map(Cell.coordinate, visited):
                         continue
+                    if neighbor.coordinate() not in list(map(lambda x: x.coordinate, queue.keys())):
+                        neighbor.setParent(current)
+                        g = (neighbor.parent.cost + 1)
+                        h = A_star_search.heuristic(neighbor, end)
+                        f = g + h
+                        queue[neighbor] = (g, h, f)
                     g = (neighbor.parent.cost + 1)
                     h = A_star_search.heuristic(neighbor, end)
                     f = g + h
-                    if neighbor.coordinate() not in list(map(lambda x: x.coordinate, queue.keys())):
-                        neighbor.setParent(current)
-                        queue[neighbor] = (g, h, f)
-                    elif queue[neighbor][2] < f:
+                    if queue[neighbor][2] > f:
                         queue[neighbor] = (g, h, f)
                 queue = A_star_search.sorted_dict(queue)
                 file.write(f"{queue=}\n\n\n")
