@@ -20,3 +20,10 @@ class Cell:
 
     def setParent(self, parent_cell):
         self.parent = parent_cell
+
+    def __repr__(self):
+        return f"Cell({self.y}, {self.x})"
+    
+    # @staticmethod
+    def coordinate(self):
+        return (self.y, self.x)
