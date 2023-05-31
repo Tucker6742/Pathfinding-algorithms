@@ -1,9 +1,10 @@
+from typing import Tuple
 from ..models.Cell import Cell
 from ..models.Maze import Maze
 
 
 class A_star_search:
-    def search(maze: Maze):
+    def search(maze: Maze) -> Tuple[list[Cell] | None, list[Cell]]:
         start: Cell = maze.starting_point
         end: Cell = maze.ending_point
 
@@ -20,7 +21,7 @@ class A_star_search:
             current = queue.popitem()
             visited.append(current)
             if current == end:
-                return A_star_search.reconstruct_path(maze, current)
+                return A_star_search.reconstruct_path(maze, current), visited
 
             for neighbor in A_star_search.get_neighbors(maze, current):
                 g = A_star_search.heuristic(start, neighbor)
@@ -32,7 +33,7 @@ class A_star_search:
                 elif queue[neighbor][2] < f:
                     queue[neighbor] = (g, h, f)
             queue = A_star_search.sorted_dict(queue)
-        return None
+        return None, visited
 
     @staticmethod
     def sorted_dict(dict: dict[Cell.Cell:int]):
