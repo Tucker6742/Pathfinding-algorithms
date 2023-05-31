@@ -1,5 +1,5 @@
 import tkinter as tk
-from models.Maze import Maze
+from src.models.Maze import Maze
 
 
 window = tk.Tk()
