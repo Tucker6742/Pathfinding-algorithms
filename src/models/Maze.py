@@ -1,5 +1,5 @@
 import random
-from Cell import Cell
+from .Cell import Cell
 
 class Maze:
     def __init__(self):
@@ -105,7 +105,7 @@ class Maze:
             if self.cells[a.y][a.x].rank == 0:
                 rank_counter += 1
                 self.cells[a.y][a.x].changeRank(rank_counter)
-                print(a.x,a.y)
+                #print(a.x,a.y)
                 if a.x == self.ending_point[1] and a.y == self.ending_point[0]:
                     break
                 continue

@@ -8,6 +8,7 @@ class Cell:
         self.status = None
         self.rank = 0
         self.visited = 0
+        self.parent = None
 
     def changeStatus(self, status):
         if status == 0 or status == 1:
