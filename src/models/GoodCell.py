@@ -119,4 +119,7 @@ class GoodCell:
         """
         return self.__parent
 
+    def __str__(self):
+        return f"({self.__x}, {self.__y})"
+
 
