@@ -112,7 +112,7 @@ class Dijkstra:
                             break
                     path.append(start)
                     path.reverse()
-                    return explored_path, path
+                    return path, explored_path 
 
             #Clear all start_cells
             start_cells.clear() 
