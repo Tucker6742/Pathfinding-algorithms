@@ -37,10 +37,10 @@ class GoodMaze:
         self.__start = (1, 1)
         self.__end = (31, 19)
     
-    def setStart(self,x,y):
+    def setStart(self, x, y):
         self.__start = (x, y)
 
-    def setEnd(self,x,y):
+    def setEnd(self, x, y):
         self.__end = (x, y)
 
     def getStart(self):
@@ -56,10 +56,7 @@ class GoodMaze:
         return self.__width
 
     def getCell(self, x_coordinate, y_coordinate):
-        for x in range(self.__width):
-            for y in range(self.__height):
-                if self.__cells[x][y].getCoordinates() == (x_coordinate, y_coordinate):
-                    return self.__cells[x][y]
+        return self.__cells[x_coordinate][y_coordinate]
 
     def getMaze(self):
         return self.__cells
