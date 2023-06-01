@@ -66,46 +66,23 @@ class GoodMaze:
         Return neighbors of this cell
         """
         neighbors = []
-        for x in self.__width:
-            for y in self.__height:
-                if x == 0: #Left edge
-                    if y == 0: #Bottom left corner
-                        neighbors.append(self.__cells[x + 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
-                    elif y == self.__height - 1: #Top left corner
-                        neighbors.append(self.__cells[x][ y - 1])
-                        neighbors.append(self.__cells[x + 1][ y])
-                    else:
-                        neighbors.append(self.__cells[x][ y - 1])
-                        neighbors.append(self.__cells[x + 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
+        (x, y) = cell.getCoordinates()
+        if x < self.__width - 2:
+            if self.__cells[x+1][y].getStatus() == 0:
+                neighbors.append(self.__cells[x+1][y])
 
-                elif x == self.__width - 1: #Right edge
-                    if y == 0: #Bottom right corner
-                        neighbors.append(self.__cells[x - 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
-                    elif y == self.__height - 1: #Top right corner
-                        neighbors.append(self.__cells[x][ y - 1])
-                        neighbors.append(self.__cells[x - 1][ y])
-                    else:
-                        neighbors.append(self.__cells[x][ y - 1])
-                        neighbors.append(self.__cells[x - 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
-        
-                else:
-                    if y == 0: #Bottom edge
-                        neighbors.append(self.__cells[x + 1][ y])
-                        neighbors.append(self.__cells[x - 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
-                    elif y == self.__height - 1: #Top edge
-                        neighbors.append(self.__cells[x + 1][ y])
-                        neighbors.append(self.__cells[x - 1][ y])
-                        neighbors.append(self.__cells[x][ y - 1])
-                    else:
-                        neighbors.append(self.__cells[x + 1][ y])
-                        neighbors.append(self.__cells[x - 1][ y])
-                        neighbors.append(self.__cells[x][ y + 1])
-                        neighbors.append(self.__cells[x][ y - 1])
+        if x > 0:
+            if self.__cells[x-1][y].getStatus() == 0:
+                neighbors.append(self.__cells[x-1][y])
+
+        if y < self.__height - 2:
+            if self.__cells[x][y+1].getStatus() == 0:
+                neighbors.append(self.__cells[x][y+1])
+
+        if y > 0:
+            if self.__cells[x][y-1].getStatus() == 0:
+                neighbors.append(self.__cells[x][y-1])
+
 
         return neighbors
 
