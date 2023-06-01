@@ -118,7 +118,7 @@ class GoodMaze:
         for x in range(self.__width):
             for y in range(self.__height):
                 if self.__cells[x][y].getRank() > starting_rank and self.__cells[x][y].getRank() <= ending_rank:
-                    print(f'This cell {(x, y)} has rank:{self.__cells[x][y].getRank()} need to be changed')
+                    #print(f'This cell {(x, y)} has rank:{self.__cells[x][y].getRank()} need to be changed')
                     self.__cells[x][y].setRank(0)
 
     def createPath(self):

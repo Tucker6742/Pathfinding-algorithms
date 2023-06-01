@@ -57,7 +57,7 @@ class Agent:
         return possible_moves
 
     def move(self, maze):
-        cells = maze.getCells()
+        cells = maze.getMaze()
         direction = random.sample(self.possibleMoves(maze), k = 1)[0]
         if direction == "n":
             self.__y -= 1
