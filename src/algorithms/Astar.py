@@ -17,12 +17,8 @@ class A_star_search:
         queue[start] = (0, A_star_search.heuristic(start, end),
                         A_star_search.heuristic(start, end))
         visited: list[GoodCell] = []
-        file = open("astar.txt", "w")
         while queue:
             current: GoodCell = queue.popitem()[0]
-            file.write(
-                f"{current.getParent()}->{current.getCoordinates()}:{A_star_search.heuristic(current, end)}\n\n")
-            file.write(f"{visited=}\n\n")
             visited.append(current)
             if current.getCoordinates() == end.getCoordinates():
                 print("Found path")
@@ -43,9 +39,7 @@ class A_star_search:
                     neighbor.setRank(g)
                     queue[neighbor] = (g, h, f)
                     new_node = False
-            file.write(f"Unordered {queue=}\n\n")
             queue = A_star_search.sorted_dict(queue)
-            file.write(f"{queue=}\n\n\n")
         return None, visited
 
     @staticmethod
@@ -59,20 +53,20 @@ class A_star_search:
         y = cell.getCoordinates()[1]
         if x < maze.getWidth() - 2:
             # right
-            if maze.getMaze()[y][x+1].getStatus() == 0:
-                neighbors.append(maze.getMaze()[y][x+1])
+            if maze.getMaze()[x+1][y].getStatus() == 0:
+                neighbors.append(maze.getMaze()[x+1][y])
         if y > 0:
             # down
-            if maze.getMaze()[y-1][x].getStatus() == 0:
-                neighbors.append(maze.getMaze()[y-1][x])
+            if maze.getMaze()[x][y-1].getStatus() == 0:
+                neighbors.append(maze.getMaze()[x][y-1])
         if y < maze.getHeight() - 2:
             # up
-            if maze.getMaze()[y+1][x].getStatus() == 0:
-                neighbors.append(maze.getMaze()[y+1][x])
+            if maze.getMaze()[x][y+1].getStatus() == 0:
+                neighbors.append(maze.getMaze()[x][y+1])
         if x > 0:
             # left
-            if maze.getMaze()[y][x-1].getStatus() == 0:
-                neighbors.append(maze.getMaze()[y][x-1])
+            if maze.getMaze()[x-1][y].getStatus() == 0:
+                neighbors.append(maze.getMaze()[x-1][y])
         return neighbors
 
     @staticmethod

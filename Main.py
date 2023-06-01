@@ -1,7 +1,7 @@
 import tkinter as tk
 from src.models.GoodMaze import GoodMaze as Maze
 from src.models.GoodCell import GoodCell as Cell
-from src.algorithms.astar import A_star_search
+from src.algorithms.Astar import A_star_search
 from src.algorithms.gbfs import greedy_best_first_search
 
 #Init window

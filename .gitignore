@@ -2,4 +2,5 @@
 ./src/models/__pycache__
 ./test.py
 *.png
-*.jpg
+*.jpg\
+astar_main.py
