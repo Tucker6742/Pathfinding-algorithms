@@ -1,64 +1,66 @@
 from queue import Queue
-from src.models.Cell import Cell
-from src.models.Maze import Maze
-class BFS_Search:
-    def search(maze: Maze):
-        start: Cell = Cell(maze.starting_point[1], maze.starting_point[0])
-        end: Cell = Cell(maze.ending_point[1], maze.ending_point[0])
+from ..models.GoodCell import GoodCell
+from ..models.GoodMaze import GoodMaze
 
+class BFS_Search:
+    def search(maze: GoodMaze):
+        start: GoodCell = GoodCell(maze.getStart()[0], maze.getStart()[1])
+        end: GoodCell = GoodCell(maze.getEnd()[0], maze.getEnd()[1])
+        
         queue = Queue()
         queue.put(start)
         visited = set()
-        visited.add(start)
-
+        visited.add(start.getCoordinates())
         parent = {}
-        parent[start] = None
+        found = False
 
         while not queue.empty():
             current = queue.get()
 
-            if current.coordinate() == end.coordinate():
-                print("Found path")
-                return BFS_Search.reconstruct_path(maze, current), visited
+            if current.getCoordinates() == end.getCoordinates():
+                found = True
+                break
+
             for neighbor in BFS_Search.get_neighbors(maze, current):
-                if neighbor not in visited:
+                if neighbor.getCoordinates() not in visited:
                     queue.put(neighbor)
-                    visited.add(neighbor)
+                    visited.add(neighbor.getCoordinates())
                     parent[neighbor] = current
 
-        return None, visited
+        if found:
+            print("Found path by BFS")
+            return BFS_Search.reconstruct_path(maze,end), list(visited)
+        else:
+            return None, list(visited)
 
     @staticmethod
-    def get_neighbors(maze: Maze, cell: Cell):
+    def get_neighbors(maze: GoodMaze, cell: GoodCell):
         neighbors = []
-        x = cell.x
-        y = cell.y
+        (x, y) = cell.getCoordinates()
 
-        if x < maze.width - 1:
+        if x < maze.getWidth() - 1 and maze.getCell(x + 1, y).getStatus() == 0:
             # right
-            if maze.cells[y][x + 1].status == 0:
-                neighbors.append(maze.cells[y][x + 1])
-        if y > 0:
+            neighbors.append(maze.getCell(x + 1, y))
+        if y > 0 and maze.getCell(x, y - 1).getStatus() == 0:
             # up
-            if maze.cells[y - 1][x].status == 0:
-                neighbors.append(maze.cells[y - 1][x])
-        if y < maze.height - 1:
+            neighbors.append(maze.getCell(x, y - 1))
+        if y < maze.getHeight() - 1 and maze.getCell(x, y + 1).getStatus() == 0:
             # down
-            if maze.cells[y + 1][x].status == 0:
-                neighbors.append(maze.cells[y + 1][x])
-        if x > 0:
+            neighbors.append(maze.getCell(x, y + 1))
+        if x > 0 and maze.getCell(x - 1, y).getStatus() == 0:
             # left
-            if maze.cells[y][x - 1].status == 0:
-                neighbors.append(maze.cells[y][x - 1])
+            neighbors.append(maze.getCell(x - 1, y))
 
         return neighbors
 
     @staticmethod
-    def reconstruct_path(maze: Maze, current: Cell):
+    def reconstruct_path(maze: GoodMaze, cell: GoodCell):
         path = []
-        while current.parent:
-            path.append(current)
-            current = current.parent
-        path.append(Cell(maze.starting_point[1], maze.starting_point[0]))
+        while cell.getParent() is not None:
+            path.append(cell.getCoordinates())
+            cell = cell.getParent()
+        path.append(maze.getStart())
         path.reverse()
         return path
+
+
