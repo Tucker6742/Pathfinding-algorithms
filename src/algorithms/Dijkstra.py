@@ -1,7 +1,3 @@
-"""
-Comsider maze as an 1D array of cells.
-"""
-
 from ..models.GoodCell import GoodCell as Cell 
 from ..models.GoodMaze import GoodMaze as Maze
 
@@ -59,9 +55,9 @@ class Dijkstra:
         """
         Finding shortest path from start to end using Dijkstra algorithm.
         Parameters:
-            maze: 1D array of cells
-            start: (x, y)
-            end: (x, y)
+            maze: maze object
+            start: start cell
+            end: end cell
 
         All cells except start are set distance of infinity.
         Weight will be added to distance of each cell when visit that cell.
