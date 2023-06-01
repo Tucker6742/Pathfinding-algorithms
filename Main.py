@@ -1,6 +1,8 @@
 import tkinter as tk
 from src.models.GoodMaze import GoodMaze as Maze
 from src.models.GoodCell import GoodCell as Cell
+from src.algorithms.astar import A_star_search
+from src.algorithms.gbfs import greedy_best_first_search
 
 #Init window
 window = tk.Tk()
@@ -36,4 +38,5 @@ for x in range(maze.getWidth()):
         if maze.getCell(x, y).getCoordinates() == maze.getEnd():
             cell.configure(bg = "#ED1C24")
         cell.place(x = x*30, y = y*30, width = 30, height = 30)
-window.mainloop()
+#window.mainloop()
+
