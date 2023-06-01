@@ -1,4 +1,4 @@
-from ..models.Cell import Cell
+from ..models.GoodCell import GoodCell
 from ..models.Maze import Maze
 
 
