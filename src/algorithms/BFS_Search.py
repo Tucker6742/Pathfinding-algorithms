@@ -29,9 +29,16 @@ class BFS_Search:
 
         if found:
             print("Found path by BFS")
-            return BFS_Search.reconstruct_path(maze,end), list(visited)
+            visited_sorted = sorted(list(visited))
+            return BFS_Search.reconstruct_path(maze, end), visited_sorted
         else:
-            return None, list(visited)
+            visited_sorted = sorted(list(visited))
+            return None, visited_sorted
+    @staticmethod
+    def sorted_dict(dict_point: dict[GoodCell:int]):
+        sorted_items = sorted(dict_point.items(), key=lambda item: item[1], reverse=True)
+        sorted_dict = dict(sorted_items)
+        return sorted_dict
 
     @staticmethod
     def get_neighbors(maze: GoodMaze, cell: GoodCell):
