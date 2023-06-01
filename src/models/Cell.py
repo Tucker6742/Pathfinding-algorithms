@@ -9,6 +9,7 @@ class Cell:
         self.rank = 0
         self.visited = 0
         self.parent = None
+        self.cost = 0
 
     def changeStatus(self, status):
         if status == 0 or status == 1:
@@ -21,3 +22,12 @@ class Cell:
 
     def setParent(self, parent_cell):
         self.parent = parent_cell
+
+    def __repr__(self):
+        return f"Cell({self.y}, {self.x})"
+    
+    # @staticmethod
+    def coordinate(self):
+        return (self.y, self.x)
+    
+    

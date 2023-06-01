@@ -1,2 +1,5 @@
-./__pycache__
+./src/algorithm/__pycache__
+./src/models/__pycache__
 ./test.py
+*.png
+*.jpg
