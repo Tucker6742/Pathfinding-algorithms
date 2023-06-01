@@ -19,8 +19,8 @@ for x in range(maze.getWidth()):
         if maze.getCell(x, y).getCoordinates() == maze.getEnd():
             cell.configure(bg = "#ED1C24")
         cell.place(x = x*30, y = y*30, width = 30, height = 30)
-#maze.randomizeMaze()
-maze.randomizeMazeDepthFirst(maze.getStart())
+maze.randomizeMaze()
+#maze.randomizeMazeDepthFirst(maze.getStart())
 for widget in maze_frame.winfo_children():
     widget.destroy()
 
