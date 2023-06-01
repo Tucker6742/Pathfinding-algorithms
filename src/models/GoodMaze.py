@@ -61,7 +61,7 @@ class GoodMaze:
                 if self.__cells[x][y].getCoordinates() == (x_coordinate, y_coordinate):
                     return self.__cells[x][y]
 
-    def getCells(self):
+    def getMaze(self):
         return self.__cells
 
     def getNeighbors(self, cell:Cell) -> list[tuple]:
