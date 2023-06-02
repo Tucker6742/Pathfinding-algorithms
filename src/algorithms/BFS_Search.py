@@ -2,16 +2,17 @@ from queue import Queue
 from ..models.GoodCell import GoodCell
 from ..models.GoodMaze import GoodMaze
 
+
 class BFS_Search:
     def search(maze: GoodMaze):
         start: GoodCell = GoodCell(maze.getStart()[0], maze.getStart()[1])
         end: GoodCell = GoodCell(maze.getEnd()[0], maze.getEnd()[1])
-        
+
         queue = Queue()
         queue.put(start)
-        visited = set()
-        visited.add(start.getCoordinates())
-        parent = {}
+        visited = []
+        visited.append(start.getCoordinates())
+        # parent = {}
         found = False
 
         while not queue.empty():
@@ -24,25 +25,27 @@ class BFS_Search:
             for neighbor in BFS_Search.get_neighbors(maze, current):
                 if neighbor.getCoordinates() not in visited:
                     queue.put(neighbor)
-                    visited.add(neighbor.getCoordinates())
-                    parent[neighbor] = current
+                    visited.append(neighbor.getCoordinates())
+                    neighbor.setParent(current)
 
         if found:
             print("Found path by BFS")
             visited_sorted = sorted(list(visited))
-            return BFS_Search.reconstruct_path(maze, end), visited_sorted
+            return BFS_Search.reconstruct_path(maze, current), visited_sorted
         else:
             visited_sorted = sorted(list(visited))
             return None, visited_sorted
+
     @staticmethod
     def sorted_dict(dict_point: dict[GoodCell:int]):
-        sorted_items = sorted(dict_point.items(), key=lambda item: item[1], reverse=True)
+        sorted_items = sorted(dict_point.items(),
+                              key=lambda item: item[1], reverse=True)
         sorted_dict = dict(sorted_items)
         return sorted_dict
 
     @staticmethod
     def get_neighbors(maze: GoodMaze, cell: GoodCell):
-        neighbors = []
+        neighbors: list[GoodCell] = []
         (x, y) = cell.getCoordinates()
 
         if x < maze.getWidth() - 1 and maze.getCell(x + 1, y).getStatus() == 0:
@@ -69,5 +72,3 @@ class BFS_Search:
         path.append(maze.getStart())
         path.reverse()
         return path
-
-

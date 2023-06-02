@@ -3,6 +3,8 @@ from src.models.GoodMaze import GoodMaze as Maze
 from src.models.GoodCell import GoodCell as Cell
 from src.algorithms.Astar import A_star_search
 from src.algorithms.gbfs import greedy_best_first_search
+from src.algorithms.BFS_Search import BFS_Search
+
 
 #Init window
 window = tk.Tk()
@@ -39,4 +41,3 @@ for x in range(maze.getWidth()):
             cell.configure(bg = "#ED1C24")
         cell.place(x = x*30, y = y*30, width = 30, height = 30)
 #window.mainloop()
-
