@@ -8,6 +8,9 @@ from src.models.GoodMaze import GoodMaze as Maze
 #from src.Visualize.DropDown import DropDown
 from src.algorithms.Astar import A_star_search
 from src.algorithms.Dijkstra import Dijkstra
+from src.algorithms.BFS_Search import BFS_Search
+from src.algorithms.Dfs import dfs
+from src.algorithms.gbfs import greedy_best_first_search
 
 
 
@@ -37,11 +40,11 @@ def drawMaze(screen, maze, path, cell_size):
     pygame.display.update(cell)
 
 
-def startSolve(draw_solve, solve_event):
+def startSolve(draw_solve, draw_event):
     if draw_solve == True:
-        pygame.time.set_timer(solve_event, 10)
+        pygame.time.set_timer(draw_event, 10)
     else:
-        pygame.time.set_timer(solve_event, 0)
+        pygame.time.set_timer(draw_event, 0)
 
 def drawExplored(screen, maze, path, cell_size):
     width, height = pygame.display.get_surface().get_size()
@@ -71,7 +74,7 @@ def getMazeInfo():
     paths = maze.paths
     
     paths.sort(key = lambda x: x.getRank())
-    print(paths)
+
     return maze, paths, walls
 
 def main():
@@ -137,6 +140,11 @@ def main():
     draw_maze_surface = True
     draw_solve = False
     solve = False
+    solve_astar = False
+    solve_dijkstra = False
+    solve_bfs = False
+    solve_dfs = False
+    solve_greedy = False
     
     
 
@@ -144,20 +152,15 @@ def main():
     draw_maze_event = pygame.USEREVENT + 1
 
     #Create event to draw solution
-    solve_dijkstra_event = pygame.USEREVENT + 2
-    solve_astar_event = pygame.USEREVENT + 3
-    solve_bfs_event = pygame.USEREVENT + 4
-    solve_dfs_event = pygame.USEREVENT + 5
-    solve_greedy_event = pygame.USEREVENT + 6
-    solve_list = [solve_dijkstra_event, solve_astar_event, solve_bfs_event, solve_dfs_event, solve_greedy_event]
-    
+    draw_dijkstra_event = pygame.USEREVENT + 2
+    draw_astar_event = pygame.USEREVENT + 3
+    draw_bfs_event = pygame.USEREVENT + 4
+    draw_dfs_event = pygame.USEREVENT + 5
+    draw_greedy_event = pygame.USEREVENT + 6
+
+    #Init screen
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Pathfinding Visualizer')
-
-
-    
-   
-
     screen.fill('#dceef7')
 
     # Our game loop
@@ -172,13 +175,6 @@ def main():
             screen.blit(maze_surf, ((width - maze.getWidth()*cell_size)/2, (height - maze.getHeight()*cell_size)/2))
             draw_maze_surface = False
 
-            
-    
-            #Dijkstra
-            (x_start, y_start) = maze.getStart()
-            (x_end, y_end) = maze.getEnd()
-            best_path_dijkstra, explored_path_dijkstra  = Dijkstra.dijkstra(maze, maze.getCell(x_start, y_start), maze.getCell(x_end, y_end))
-    
             solve = True
             
 
@@ -190,9 +186,23 @@ def main():
                 solve_astar = False
             elif solve_dijkstra == True:
                 #Dijkstra
-                best_path_dijkstra_copy = best_path_dijkstra.copy()
-                explored_path_dijkstra_copy = explored_path_dijkstra.copy()
+                (x_start, y_start) = maze.getStart()
+                (x_end, y_end) = maze.getEnd()
+                best_path_dijkstra, explored_path_dijkstra  = Dijkstra.dijkstra(maze, maze.getCell(x_start, y_start), maze.getCell(x_end, y_end))
                 solve_dijkstra = False
+            elif solve_bfs == True:
+                #Bfs
+                best_path_bfs, explored_path_bfs = BFS_Search.search(maze)
+                solve_bfs = False
+            elif solve_dfs == True:
+                #Dfs
+                best_path_dfs, explored_path_dfs = dfs(maze)
+                solve_dfs = False
+            elif solve_greedy == True:
+                #Greedy
+                best_path_greedy, explored_path_greedy = greedy_best_first_search.search(maze)
+                solve_greedy = False
+
 
             solve = False
 
@@ -214,19 +224,30 @@ def main():
                             pygame.event.clear()
                             startDrawMaze(draw_maze, draw_maze_event)
                         elif button.text == 'A*':
+                            solve_astar = True
                             draw_solve = True
                             pygame.event.clear()
-                            startSolve(draw_solve, solve_astar_event)
+                            startSolve(draw_solve, draw_astar_event)
                         elif button.text == 'Dijkstra':
+                            solve_dijkstra = True
                             draw_solve = True
                             pygame.event.clear()
-                            startSolve(draw_solve, solve_dijkstra_event)
+                            startSolve(draw_solve, draw_dijkstra_event)
                         elif button.text == 'BFS':
-                            pass
+                            solve_bfs = True
+                            draw_solve = True
+                            pygame.event.clear()
+                            startSolve(draw_solve, draw_bfs_event)
                         elif button.text == 'DFS':
-                            pass
+                            solve_dfs = True
+                            draw_solve = True
+                            pygame.event.clear()
+                            startSolve(draw_solve, draw_dfs_event)
                         elif button.text == 'Greedy':
-                            pass
+                            solve_greed = True
+                            draw_solve = True
+                            pygame.event.clear()
+                            startSolve(draw_solve, draw_greedy_event)
 
             #If press Stop button
             elif event.type == MOUSEBUTTONUP:
@@ -253,7 +274,7 @@ def main():
                     startDrawMaze(draw_maze, draw_maze_event)
 
             #Draw solution
-            elif event.type == solve_dijkstra_event:
+            elif event.type == draw_dijkstra_event:
                 
                 if len(explored_path_dijkstra) > 0:
                     drawExplored(screen, maze, explored_path_dijkstra.pop(0), cell_size)
@@ -262,8 +283,8 @@ def main():
                         drawSolve(screen, maze, best_path_dijkstra.pop(0), cell_size)
                     else:
                         draw_solve = False
-                        startSolve(draw_solve, solve_dijkstra_event)
-            elif event.type == solve_astar_event:
+                        startSolve(draw_solve, draw_dijkstra_event)
+            elif event.type == draw_astar_event:
                 if len(explored_path_astar) > 0:
                     drawExplored(screen, maze, explored_path_astar.pop(0), cell_size)
                 else:
@@ -271,7 +292,7 @@ def main():
                         drawSolve(screen, maze, best_path_astar.pop(0), cell_size)
                     else:
                         draw_solve = False
-                        startSolve(draw_solve, solve_astar_event)
+                        startSolve(draw_solve, draw_astar_event)
                 
             
              
