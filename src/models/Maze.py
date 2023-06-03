@@ -12,6 +12,18 @@ class Maze:
         #2D arrays are [heigt][width], so [0, 0] are actually [y, x]
         self.starting_point = [1, 1]
         self.ending_point = [19, 31]
+
+    def setEnvironment(self):
+        for y in range(1, self.height-1):
+            for x in range(1, self.width-1):
+                if self.cells[y-1][x].status == 1:
+                    self.cells[y][x].environment['N'] = 1
+                if self.cells[y+1][x].status == 1:
+                    self.cells[y][x].environment['S'] = 1
+                if self.cells[y][x-1].status == 1:
+                    self.cells[y][x].environment['W'] = 1
+                if self.cells[y][x+1].status == 1:
+                    self.cells[y][x].environment['E'] = 1
     
     def changeStartingPoint(self,x,y):
         self.starting_point = [y, x]
@@ -22,6 +34,7 @@ class Maze:
     def randomizeMaze(self):
         self.createPath()
         self.batchChangeStatus()
+        self.setEnvironment()
 
     def deletePath(self, starting_rank, ending_rank):
         for y in range(self.height):
@@ -175,6 +188,35 @@ class Maze:
         current_coordinate = [self.starting_point[0], self.starting_point[1]]
         self.cells[self.starting_point[1]][self.starting_point[0]].visited = 1
         createRandomPath(self, current_coordinate)
+        self.setEnvironment()
+
+    def westCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX - 1
+        searchingY = currentY
+        cell = maze.cells[searchingY][searchingX]
+        return cell
+
+    def southCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX 
+        searchingY = currentY + 1
+        cell = maze.cells[searchingY][searchingX]
+        return cell
+        
+    def eastCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX + 1
+        searchingY = currentY
+        cell = maze.cells[searchingY][searchingX]
+        return cell 
+     
+    def northCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX
+        searchingY = currentY - 1
+        cell = maze.cells[searchingY][searchingX]
+        return cell
         
                 
 

@@ -3,7 +3,7 @@ from src.models.GoodMaze import GoodMaze as Maze
 from src.models.GoodCell import GoodCell as Cell
 from src.algorithms.Astar import A_star_search
 from src.algorithms.gbfs import greedy_best_first_search
-from src.algorithms.BFS_Search import BFS_Search
+from src.algorithms.Dijkstra import Dijkstra
 
 
 #Init window
@@ -24,8 +24,8 @@ for x in range(maze.getWidth()):
         if maze.getCell(x, y).getCoordinates() == maze.getEnd():
             cell.configure(bg = "#ED1C24")
         cell.place(x = x*30, y = y*30, width = 30, height = 30)
-maze.randomizeMaze()
-#maze.randomizeMazeDepthFirst(maze.getStart())
+#maze.randomizeMaze()
+maze.randomizeMazeDepthFirst(maze.getStart())
 for widget in maze_frame.winfo_children():
     widget.destroy()
 
@@ -40,4 +40,10 @@ for x in range(maze.getWidth()):
         if maze.getCell(x, y).getCoordinates() == maze.getEnd():
             cell.configure(bg = "#ED1C24")
         cell.place(x = x*30, y = y*30, width = 30, height = 30)
+
+
+(x_start, y_start) = maze.getStart()
+(x_end, y_end) = maze.getEnd()
+best_path, explored_path  = Dijkstra.dijkstra(maze, maze.getCell(x_start, y_start), maze.getCell(x_end, y_end))
+print(best_path)
 #window.mainloop()

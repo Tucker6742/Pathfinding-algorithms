@@ -66,11 +66,11 @@ class Dijkstra:
         #Convert to my maze and my cells
         for x in range(maze.getWidth()):
             for y in range(maze.getHeight()):
-                maze.getMaze()[x][y] = My_Cell(x, 
-                                               y, 
-                                               maze.getCell(x, y).getStatus(),
-                                               maze.getCell(x, y).isVisited(),
-                                               maze.getCell(x, y).getWeight()
+                maze.getMaze()[x][y] = My_Cell(x = x, 
+                                               y = y, 
+                                               status = maze.getCell(x, y).getStatus(),
+                                               visited = False,
+                                               weight = maze.getCell(x, y).getWeight()
                                                )
 
         #Initialize distance of start to 0
@@ -83,13 +83,31 @@ class Dijkstra:
         start_cells = []
         start_cells.append(start)
 
+        #File
+        file = open('Dijkstra.txt', 'w')
+
+
         #Loop until all cells are visited
+        #loop = 0
         while True:
+            #loop += 1
+            #print(loop)
+            #file.write(f'Loop {loop}\n')
+            
+            #file.write(f'Number of start cells: {len(start_cells)}\n')
+            #file.write(f'({start_cells})\n')
+
+            
+
             #Get distances to neighbors
             for cell in start_cells:
                 for neighbor_cell in maze.getNeighbors(cell):
                     distance = cell.getDistance() + neighbor_cell.getWeight() #Get real distance to neighbor_cell
+                    #file.write(f'Neighbor cell: {neighbor_cell.getCoordinates()}\n')
+                    #if neighbor_cell.isVisited() == True: #If neighbor_cell is not visited
+                        #file.write(f'Visited neighbor cell: {neighbor_cell.getCoordinates()}\n')
                     if neighbor_cell.isVisited() == False: #If neighbor_cell is not visited 
+                        #file.write(f'Distance from {cell.getCoordinates()} to {neighbor_cell.getCoordinates()}: {distance}\n')
                         if neighbor_cell.getStatus() == 0: #If neighbor_cell is not wall
                             if neighbor_cell.getDistance() > distance: #Update distance
                                 neighbor_cell.setDistance(distance)  
@@ -126,6 +144,7 @@ class Dijkstra:
                     if cell.isVisited() == False and cell.getStatus() == 0 \
                         and min_dist > cell.getDistance():
                         min_dist = cell.getDistance()
+            #file.write(f'Min distance: {min_dist}\n')
             
             #Find all cells with min distance
             for x in range(maze.getWidth()):

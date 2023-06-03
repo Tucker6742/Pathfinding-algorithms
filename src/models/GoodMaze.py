@@ -26,12 +26,10 @@ class GoodMaze:
         getNeighbors(cell) -> list[tuple]
         other for random maze generation
     """
-
-    def __init__(self):
-        self.__width = 33
-        self.__height = 21
-        self.__cells: list[list[Cell]] = [
-            [0]*self.__height for i in range(self.__width)]
+    def __init__(self, width = 33, height = 21):
+        self.__width = width
+        self.__height = height
+        self.__cells = [[0]*self.__height for i in range(self.__width)]
 
         for x in range(self.__width):
             for y in range(self.__height):
@@ -39,7 +37,11 @@ class GoodMaze:
 
         self.__start = (1, 1)
         self.__end = (31, 19)
+        self.walls = []
+        self.paths = []
+        self.rank = 0
 
+    
     def setStart(self, x, y):
         self.__start = (x, y)
 
@@ -98,6 +100,7 @@ class GoodMaze:
                 if self.__cells[x][y].getRank() > starting_rank and self.__cells[x][y].getRank() <= ending_rank:
                     # print(f'This cell {(x, y)} has rank:{self.__cells[x][y].getRank()} need to be changed')
                     self.__cells[x][y].setRank(0)
+                    self.walls.append(self.__cells[x][y])
 
     def createPath(self):
         a = Agent(self.__start[0], self.__start[1])
@@ -108,13 +111,18 @@ class GoodMaze:
             # print(f'a:{a.getCoordinates()}, rank a before:{self.__cells[a.getCoordinates()[0]][a.getCoordinates()[1]].getRank()}')
             if self.__cells[a.getCoordinates()[0]][a.getCoordinates()[1]].getRank() == 0:
                 rank_counter += 1
-
-                self.__cells[a.getCoordinates()[0]][a.getCoordinates()[
-                    1]].setRank(rank_counter)
-                # print(f'rank a after:{self.__cells[a.getCoordinates()[0]][a.getCoordinates()[1]].getRank()}')
-                # print(f'a:{a.getCoordinates()},  end:{self.__end}')
+                
+                self.__cells[a.getCoordinates()[0]][a.getCoordinates()[1]].setRank(rank_counter)
+                
+                #print(f'rank a after:{self.__cells[a.getCoordinates()[0]][a.getCoordinates()[1]].getRank()}')
+                #print(f'a:{a.getCoordinates()},  end:{self.__end}')
                 if a.getCoordinates() == self.__end:
-                    # print('Found')
+                    for i in range(1, rank_counter):
+                        for x in range(self.__width):
+                            for y in range(self.__height):
+                                if self.__cells[x][y].getRank() == i:
+                                   self.paths.append(self.__cells[x][y])
+                    #print('Found')
                     break
                 continue
             else:
@@ -145,8 +153,13 @@ class GoodMaze:
                 for y in range(self.__height):
                     if x % 2 == 1 and y % 2 == 1:  # Set all cells not edge to be normal
                         self.__cells[x][y].setStatus(0)
-                    else:  # Set all edges to be walls
+                        self.__cells[x][y].setRank(0)
+                        self.paths.append(self.__cells[x][y])
+                            #self.paths.append(self.__cells[x][y])
+                    else:
                         self.__cells[x][y].setStatus(1)
+                    
+                        
             self.__cells[self.__start[0]][self.__start[1]].setVisited(True)
             init = True
             self.randomizeMazeDepthFirst(self.__start, init, create_path)
@@ -183,9 +196,23 @@ class GoodMaze:
                 # Visit the child cell and set the wall between the child cell and the current cell to be normal cell
                 cells[x_child][y_child].setVisited(True)
                 cells[int((x_child + x)/2)][int((y_child+y)/2)].setStatus(0)
-                # Set the parent of the child cell to be the current cell
+
+                self.rank += 1
+                cells[int((x_child + x)/2)][int((y_child+y)/2)].setRank(self.rank)
+                cells[x_child][y_child].setRank(self.rank + 1)
+                self.paths.append(cells[int((x_child + x)/2)][int((y_child+y)/2)])
+                self.paths.append(cells[x_child][y_child])
+                #Set the parent of the child cell to be the current cell
                 cells[x_child][y_child].setParent(cells[x][y])
                 # Set the current cell to be the child cell
                 current_coordinate = child_coordinate
-                self.randomizeMazeDepthFirst(
-                    current_coordinate, init, create_path)
+                self.randomizeMazeDepthFirst(current_coordinate, init, create_path)
+
+             
+
+        
+                
+
+
+        
+

@@ -21,7 +21,7 @@ class A_star_search:
             current: GoodCell = queue.popitem()[0]
             visited.append(current)
             if current.getCoordinates() == end.getCoordinates():
-                print("Found path")
+                #print("Found path")
                 return A_star_search.reconstruct_path(maze, current), visited
 
             for neighbor in A_star_search.get_neighbors(maze, current):
