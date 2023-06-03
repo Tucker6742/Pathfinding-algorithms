@@ -27,10 +27,10 @@ class BFS_Search:
 
         if found:
             print("Found path by BFS")
-            visited_sorted = sorted(list(map(GoodCell.getCoordinates, visited)))
+            visited_sorted = visited
             return BFS_Search.reconstruct_path(maze, current), visited_sorted
         else:
-            visited_sorted = sorted(list(map(GoodCell.getCoordinates, visited)))
+            visited_sorted = visited
             return None, visited_sorted
 
     @staticmethod
@@ -57,8 +57,8 @@ class BFS_Search:
     def reconstruct_path(maze: GoodMaze, cell: GoodCell):
         path = []
         while cell.getParent() is not None:
-            path.append(cell.getCoordinates())
+            path.append(cell)
             cell = cell.getParent()
-        path.append(maze.getStart())
+        #path.append(maze.getStart())
         path.reverse()
         return path

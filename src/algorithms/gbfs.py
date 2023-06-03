@@ -70,8 +70,7 @@ class greedy_best_first_search:
     def reconstruct_path(maze: GoodMaze, cell: GoodCell):
         path = []
         while cell.getParent() is not None:
-            path.append(cell.getCoordinates())
+            path.append(cell)
             cell = cell.getParent()
-        path.append(maze.getStart())
         path.reverse()
         return path
