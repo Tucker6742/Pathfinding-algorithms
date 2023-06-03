@@ -1,47 +1,37 @@
-from queue import Queue
+from collections import OrderedDict
 from ..models.GoodCell import GoodCell
 from ..models.GoodMaze import GoodMaze
-
-
 class BFS_Search:
     def search(maze: GoodMaze):
         start: GoodCell = GoodCell(maze.getStart()[0], maze.getStart()[1])
         end: GoodCell = GoodCell(maze.getEnd()[0], maze.getEnd()[1])
-
-        queue = Queue()
-        queue.put(start)
-        visited = []
-        visited.append(start.getCoordinates())
-        # parent = {}
+        queue: dict[GoodCell:tuple[int, int, int]] = OrderedDict()
+        queue[start] = (0, 0, 0)  
+        visited: list[GoodCell] = []
+        visited.append(start)
         found = False
 
-        while not queue.empty():
-            current = queue.get()
+        while queue:
+            current: GoodCell = next(iter(queue))
+            del queue[current]
 
             if current.getCoordinates() == end.getCoordinates():
                 found = True
                 break
 
             for neighbor in BFS_Search.get_neighbors(maze, current):
-                if neighbor.getCoordinates() not in visited:
-                    queue.put(neighbor)
-                    visited.append(neighbor.getCoordinates())
+                if neighbor not in visited:
+                    queue[neighbor] = (0, 0, 0)  
+                    visited.append(neighbor)
                     neighbor.setParent(current)
 
         if found:
             print("Found path by BFS")
-            visited_sorted = sorted(list(visited))
+            visited_sorted = sorted(list(map(GoodCell.getCoordinates, visited)))
             return BFS_Search.reconstruct_path(maze, current), visited_sorted
         else:
-            visited_sorted = sorted(list(visited))
+            visited_sorted = sorted(list(map(GoodCell.getCoordinates, visited)))
             return None, visited_sorted
-
-    @staticmethod
-    def sorted_dict(dict_point: dict[GoodCell:int]):
-        sorted_items = sorted(dict_point.items(),
-                              key=lambda item: item[1], reverse=True)
-        sorted_dict = dict(sorted_items)
-        return sorted_dict
 
     @staticmethod
     def get_neighbors(maze: GoodMaze, cell: GoodCell):
