@@ -57,16 +57,15 @@ def startSolve(maze, algo, solve_list):
         elif algo == 'DFS':
             #DFS
             best_path, explored_path = dfs(maze)
-        elif algo == 'GBFS':
+        elif algo == 'Greedy':
             #GBFS
-            best_path, explored_path = greedy_best_first_search(maze)
+            best_path, explored_path = greedy_best_first_search.search(maze)
 
         solve_list[algo] = [best_path, explored_path]
     else:
         best_path = solve_list[algo][0]
         explored_path = solve_list[algo][1]
 
-    
     return best_path, explored_path
 
 def drawExplored(screen, maze, path, cell_size):
@@ -92,6 +91,7 @@ def drawSolve(screen, maze, path, cell_size):
 
 
 def getMazeInfo():
+    #width and height of maze must be odd and width - height > 10
     maze = GoodMaze(55, 33)
     maze.randomizeMazeDepthFirst(maze.getStart())
     walls = maze.walls
@@ -100,14 +100,6 @@ def getMazeInfo():
     return maze
 
 def main():
-
-    #Create maze
-    #maze = GoodMaze()
-    #maze.randomizeMazeDepthFirst(maze.getStart())
-    #maze.setStart(1, 1)
-    #maze.setEnd(31, 19)
-    #maze.randomizeMaze()
-
 
     #Set up the drawing window
     width = 1730
@@ -118,19 +110,19 @@ def main():
     button_list = []
 
     #Create exit button
-    stop_button = Button(40, 40, 80, 60, color = 'blue', text = 'Stop', text_color = 'black', font_size = 32)
+    stop_button = Button(40, 40, 80, 60, color = '#27aae1', text = 'Stop', text_color = 'black', font_size = 32)
     button_list.append(stop_button)
 
     #Create randomaze button
-    randomaze_button = Button(455, 25, 270, 30, color = 'yellow', text = 'Randomize maze', text_color = 'black', font_size = 32)
+    randomaze_button = Button(455, 25, 270, 30, color = '#27aae1', text = 'Randomize maze', text_color = 'black', font_size = 32)
     button_list.append(randomaze_button)
 
     #Create menu button------------------------------------------------------------------------------
-    menu_button = Button(745, 25, 270, 30,color = 'yellow', text = 'Solve maze', font_size = 32)
+    menu_button = Button(745, 25, 270, 30,color = '#27aae1', text = 'Solve maze', text_color = 'black', font_size = 32)
     button_list.append(menu_button)
 
     menu_list = ['A*', 'Dijkstra', 'BFS', 'DFS', 'Greedy']
-    menu_item_color = 'yellow'
+    menu_item_color = '#27aae1'
     #Create Astar button
     astar_button = Button(745, 55, 270, 30, color = menu_item_color, text = 'A*', text_color = 'black', font_size = 32)
     button_list.append(astar_button)
@@ -174,6 +166,7 @@ def main():
     screen.fill('white')
 
     # Our game loop
+    press = False
     while gameOn:
 
         #Get paths and walls
@@ -199,56 +192,66 @@ def main():
                 pygame.quit()
                 sys.exit()
             # Check for MOUSEBUTTONDOWN event
+            
             elif event.type == MOUSEBUTTONDOWN:
-                for button in button_list:
-                    if button.rect.collidepoint((mouse_x, mouse_y)):
-                        pygame.event.post(pygame.event.Event(box_grow_event))
-                        if button.text == 'Stop':
-                            draw_maze = False
-                            draw_maze_surface = True
-                            pygame.event.clear()
-                            startDrawMaze(draw_maze, draw_maze_event)
+                press = True
+                if press == True:
+                    for button in button_list:
+                        if button.rect.collidepoint((mouse_x, mouse_y)):
+                        
+                            if button.text == 'Stop':
+                                draw_maze = False
+                                draw_maze_surface = True
+                                pygame.event.clear()
+                                startDrawMaze(draw_maze, draw_maze_event)
+                                solve_list.clear()
 
-                        elif button.text == 'Randomize maze':
-                            draw_maze = True
-                            startDrawMaze(draw_maze, draw_maze_event)
+
+                            elif button.text == 'Randomize maze':
+                                draw_maze = True
+                                startDrawMaze(draw_maze, draw_maze_event)
                             
-                        elif button.text == 'A*':
-                            paths = maze.paths.copy()
-                            for path in paths:
-                                drawMaze(screen, maze, path, cell_size)
-                            best_path, explored_path = startSolve(maze, button.text, solve_list)
-                            pygame.event.clear(draw_solve_event)
-                            pygame.time.set_timer(draw_solve_event, 10)
-                        elif button.text == 'Dijkstra':
-                            paths = maze.paths.copy()
-                            for path in paths:
-                                drawMaze(screen, maze, path, cell_size)
-                            best_path, explored_path = startSolve(maze, button.text, solve_list)
-                            pygame.event.clear(draw_solve_event)
-                            pygame.time.set_timer(draw_solve_event, 10)
-                        elif button.text == 'BFS':
-                            paths = maze.paths.copy()
-                            for path in paths:
-                                drawMaze(screen, maze, path, cell_size)
-                            best_path, explored_path = startSolve(maze, button.text, solve_list)
-                            pygame.event.clear(draw_solve_event)
-                            pygame.time.set_timer(draw_solve_event, 10)
-                        elif button.text == 'DFS':
-                            paths = maze.paths.copy()
-                            for path in paths:
-                                drawMaze(screen, maze, path, cell_size)
-                            best_path, explored_path = startSolve(maze, button.text, solve_list)
-                            pygame.event.clear(draw_solve_event)
-                            pygame.time.set_timer(draw_solve_event, 10)
-                        elif button.text == 'Greedy':
-                            paths = maze.paths.copy()
-                            for path in paths:
-                                drawMaze(screen, maze, path, cell_size)
-                            best_path, explored_path = startSolve(maze, button.text, solve_list)
-                            pygame.event.clear(draw_solve_event)
-                            pygame.time.set_timer(draw_solve_event, 10)
-
+                            elif button.text == 'A*':
+                                paths = maze.paths.copy()
+                                for path in paths:
+                                    drawMaze(screen, maze, path, cell_size)
+                                best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                pygame.event.clear(draw_solve_event)
+                                pygame.time.set_timer(draw_maze_event, 0)
+                                pygame.time.set_timer(draw_solve_event, 10)
+                            elif button.text == 'Dijkstra':
+                                paths = maze.paths.copy()
+                                for path in paths:
+                                    drawMaze(screen, maze, path, cell_size)
+                                best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                pygame.event.clear(draw_solve_event)
+                                pygame.time.set_timer(draw_maze_event, 0)
+                                pygame.time.set_timer(draw_solve_event, 10)
+                            elif button.text == 'BFS':
+                                paths = maze.paths.copy()
+                                for path in paths:
+                                    drawMaze(screen, maze, path, cell_size)
+                                best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                pygame.event.clear(draw_solve_event)
+                                pygame.time.set_timer(draw_maze_event, 0)
+                                pygame.time.set_timer(draw_solve_event, 10)
+                            elif button.text == 'DFS':
+                                paths = maze.paths.copy()
+                                for path in paths:
+                                    drawMaze(screen, maze, path, cell_size)
+                                best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                pygame.event.clear(draw_solve_event)
+                                pygame.time.set_timer(draw_maze_event, 0)
+                                pygame.time.set_timer(draw_solve_event, 10)
+                            elif button.text == 'Greedy':
+                                paths = maze.paths.copy()
+                                for path in paths:
+                                    drawMaze(screen, maze, path, cell_size)
+                                best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                pygame.event.clear(draw_solve_event)
+                                pygame.time.set_timer(draw_maze_event, 0)
+                                pygame.time.set_timer(draw_solve_event, 10)
+                    press = False
                       
                             
 
@@ -262,6 +265,8 @@ def main():
 
             #Draw solution
             elif event.type == draw_solve_event:
+                explored_path = explored_path.copy()
+                best_path = best_path.copy()
                 if len(explored_path) > 0:
                     drawExplored(screen, maze, explored_path.pop(0), cell_size)
                 else:
@@ -269,16 +274,9 @@ def main():
                         drawSolve(screen, maze, best_path.pop(0), cell_size)
                     else:
                         pygame.event.clear()
+                    pygame.event.clear()
 
-            #Box grow
-            elif event.type == box_grow_event:
-                for button in button_list:
-                    if grow:
-                        button.rect.inflate_ip(5, 5)
-                        grow = button.rect.width < button.width * 5
-                    else:
-                        button.rect.inflate_ip(-5, -5)
-                        grow = button.rect.width > button.width
+            
 
         #Draw buttons
         
