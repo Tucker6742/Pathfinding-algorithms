@@ -17,7 +17,7 @@ class greedy_best_first_search:
             current = queue.popitem()[0]
             visited.append(current)
             if current.getCoordinates() == end.getCoordinates():
-                print("Found path by greedy best first search")
+                #print("Found path by greedy best first search")
                 return greedy_best_first_search.reconstruct_path(maze, current), visited
 
             for neighbor in greedy_best_first_search.get_neighbors(maze, current):

@@ -84,7 +84,7 @@ class Dijkstra:
         start_cells.append(start)
 
         #File
-        file = open('Dijkstra.txt', 'w')
+        #file = open('Dijkstra.txt', 'w')
 
 
         #Loop until all cells are visited

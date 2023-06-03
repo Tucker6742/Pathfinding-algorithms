@@ -45,5 +45,5 @@ for x in range(maze.getWidth()):
 (x_start, y_start) = maze.getStart()
 (x_end, y_end) = maze.getEnd()
 best_path, explored_path  = Dijkstra.dijkstra(maze, maze.getCell(x_start, y_start), maze.getCell(x_end, y_end))
-print(best_path)
+print(type(best_path[0]))
 #window.mainloop()
