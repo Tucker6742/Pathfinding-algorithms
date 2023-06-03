@@ -8,8 +8,8 @@ from ..models.Maze import Maze
             
     
 def dfs(maze):    
-    startCell = maze.cells[maze.starting_point[1]][maze.starting_point[0]]
-    endCell = maze.cells[maze.ending_point[0]][maze.ending_point[1]]
+    startCell = maze.getCell(maze.getStart()[0], maze.getStart()[1])
+    endCell = maze.getCell(maze.getEnd()[0], maze.getEnd()[1])
     explored = []
     frontier = [startCell]
     sequence = "ESNW"
@@ -22,7 +22,7 @@ def dfs(maze):
         # Delete it from frontier list
         frontier.pop(0)
         # Break the loop if you have found the destination
-        if currentCell.x == endCell.x and currentCell.y == endCell.y:
+        if currentCell.getCoordinates()[0] == endCell.getCoordinates()[0] and currentCell.getCoordinates()[1] == endCell.getCoordinates()[1]:
             print("Found")
             break
             
@@ -55,4 +55,6 @@ def dfs(maze):
         cell = dfs_path[cell]
 
     path = list(fwd_path.values())
+    path.reverse()
+    
     return path, explored

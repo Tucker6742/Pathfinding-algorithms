@@ -40,6 +40,18 @@ class GoodMaze:
         self.walls = []
         self.paths = []
         self.rank = 0
+    
+    def setEnvironment(self):
+        for x in range(1, self.__width-1):
+            for y in range(1, self.__height-1):
+                if self.__cells[x][y-1].getStatus() == 1:
+                    self.__cells[x][y].environment['N'] = 1
+                if self.__cells[x][y+1].getStatus() == 1:
+                    self.__cells[x][y].environment['S'] = 1
+                if self.__cells[x-1][y].getStatus() == 1:
+                    self.__cells[x][y].environment['W'] = 1
+                if self.__cells[x+1][y].getStatus() == 1:
+                    self.__cells[x][y].environment['E'] = 1
 
     
     def setStart(self, x, y):
@@ -93,6 +105,7 @@ class GoodMaze:
     def randomizeMaze(self):
         self.createPath()
         self.batchChangeStatus()
+        self.setEnvironment()
 
     def deletePath(self, starting_rank, ending_rank):
         for x in range(self.__width):
@@ -207,6 +220,35 @@ class GoodMaze:
                 # Set the current cell to be the child cell
                 current_coordinate = child_coordinate
                 self.randomizeMazeDepthFirst(current_coordinate, init, create_path)
+        self.setEnvironment()
+    
+    def westCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX - 1
+        searchingY = currentY
+        cell = maze.getCell(searchingX, searchingY)
+        return cell
+
+    def southCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX 
+        searchingY = currentY + 1
+        cell = maze.getCell(searchingX, searchingY)
+        return cell
+        
+    def eastCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX + 1
+        searchingY = currentY
+        cell = maze.getCell(searchingX, searchingY)
+        return cell 
+     
+    def northCell(maze, Cell):
+        currentX, currentY = Cell.getCoordinates()
+        searchingX = currentX
+        searchingY = currentY - 1
+        cell = maze.getCell(searchingX, searchingY)
+        return cell
 
              
 

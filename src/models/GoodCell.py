@@ -45,6 +45,14 @@ class GoodCell:
         self.__weight = weight
         self.__parent = None
         self.__rank = 0
+        self.environment = {
+            'E': 0,
+            'S': 0,
+            'N': 0,
+            'W': 0
+        }
+        self.ispath = 0
+        self.passpath = 0
 
     def setRank(self, rank):
         """
