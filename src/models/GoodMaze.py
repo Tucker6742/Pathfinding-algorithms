@@ -220,7 +220,7 @@ class GoodMaze:
                 # Set the current cell to be the child cell
                 current_coordinate = child_coordinate
                 self.randomizeMazeDepthFirst(current_coordinate, init, create_path)
-        self.setEnvironment()
+        #self.setEnvironment()
     
     def westCell(maze, Cell):
         currentX, currentY = Cell.getCoordinates()

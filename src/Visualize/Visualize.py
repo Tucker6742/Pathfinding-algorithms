@@ -172,6 +172,7 @@ def main():
         #Get paths and walls
         if draw_maze_surface == True:
             maze = getMazeInfo()
+            maze.setEnvironment()
             paths = maze.paths.copy()
             best_path = []
             explored_path = []
@@ -210,47 +211,22 @@ def main():
                             elif button.text == 'Randomize maze':
                                 draw_maze = True
                                 startDrawMaze(draw_maze, draw_maze_event)
+
                             
-                            elif button.text == 'A*':
-                                paths = maze.paths.copy()
-                                for path in paths:
-                                    drawMaze(screen, maze, path, cell_size)
-                                best_path, explored_path = startSolve(maze, button.text, solve_list)
-                                pygame.event.clear(draw_solve_event)
-                                pygame.time.set_timer(draw_maze_event, 0)
-                                pygame.time.set_timer(draw_solve_event, 10)
-                            elif button.text == 'Dijkstra':
-                                paths = maze.paths.copy()
-                                for path in paths:
-                                    drawMaze(screen, maze, path, cell_size)
-                                best_path, explored_path = startSolve(maze, button.text, solve_list)
-                                pygame.event.clear(draw_solve_event)
-                                pygame.time.set_timer(draw_maze_event, 0)
-                                pygame.time.set_timer(draw_solve_event, 10)
-                            elif button.text == 'BFS':
-                                paths = maze.paths.copy()
-                                for path in paths:
-                                    drawMaze(screen, maze, path, cell_size)
-                                best_path, explored_path = startSolve(maze, button.text, solve_list)
-                                pygame.event.clear(draw_solve_event)
-                                pygame.time.set_timer(draw_maze_event, 0)
-                                pygame.time.set_timer(draw_solve_event, 10)
-                            elif button.text == 'DFS':
-                                paths = maze.paths.copy()
-                                for path in paths:
-                                    drawMaze(screen, maze, path, cell_size)
-                                best_path, explored_path = startSolve(maze, button.text, solve_list)
-                                pygame.event.clear(draw_solve_event)
-                                pygame.time.set_timer(draw_maze_event, 0)
-                                pygame.time.set_timer(draw_solve_event, 10)
-                            elif button.text == 'Greedy':
-                                paths = maze.paths.copy()
-                                for path in paths:
-                                    drawMaze(screen, maze, path, cell_size)
-                                best_path, explored_path = startSolve(maze, button.text, solve_list)
-                                pygame.event.clear(draw_solve_event)
-                                pygame.time.set_timer(draw_maze_event, 0)
-                                pygame.time.set_timer(draw_solve_event, 10)
+                            elif button.text in menu_list:
+                                try:
+                                    paths = maze.paths.copy()
+                                    for path in paths:
+                                        drawMaze(screen, maze, path, cell_size)
+
+                                    best_path, explored_path = startSolve(maze, button.text, solve_list)
+                                    pygame.event.clear(draw_solve_event)
+                                    pygame.time.set_timer(draw_maze_event, 0)
+                                    pygame.time.set_timer(draw_solve_event, 10)
+                                except:
+                                    print("Error")
+                            
+                            
                     press = False
                       
                             
@@ -265,6 +241,7 @@ def main():
 
             #Draw solution
             elif event.type == draw_solve_event:
+
                 explored_path = explored_path.copy()
                 best_path = best_path.copy()
                 if len(explored_path) > 0:
