@@ -15,7 +15,7 @@ class Button():
                  color = 'white',
                  text = '',
                  text_color = 'white',
-                 font = r'C:\Users\ciltr\Desktop\USTH\Semester 2\Intro to AI\Dijkstra\Github visual\src\Font\Lexend\static\Lexend-Light.ttf',
+                 font = r'.\src\Font\Lexend\static\Lexend-Light.ttf',
                  font_size = 32):
 
         

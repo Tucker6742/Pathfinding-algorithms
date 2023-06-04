@@ -27,20 +27,19 @@ clock = pygame.time.Clock()
 def startDraw(draw_type, draw, draw_event):
     if draw == True:
         if draw_type == 'maze':
-            pygame.time.set_timer(draw_event, 1)
+            pygame.time.set_timer(draw_event, 5)
         elif draw_type == 'solve' or draw_type == 'menu':
             pygame.time.set_timer(draw_event, 10)
     else:
         if draw_type == 'menu':
-            pygame.time.set_timer(draw_event, 10)
+            pygame.time.set_timer(draw_event, 1)
         else:
             pygame.time.set_timer(draw_event, 0)
     
 
 def drawMaze(screen, maze, path, cell_size):
-    width, height = pygame.display.get_surface().get_size()
     (x, y) = path.getCoordinates()
-    cell = pygame.Rect(x*cell_size[0] + (width - maze.getWidth()*cell_size[0])/2, y*cell_size[1] + (height - maze.getHeight()*cell_size[1])/2 + 90, cell_size[0], cell_size[1])
+    cell = pygame.Rect(x*cell_size[0] + 25, y*cell_size[1] + 80, cell_size[0], cell_size[1])
 
     pygame.draw.rect(screen, 'white', cell)
 
@@ -78,25 +77,24 @@ def startSolve(maze, algo, solve_list):
     startDraw('solve', True, pygame.USEREVENT + 2)
     return solve_list, algo
 
-def drawExplored(screen, maze, path, cell_size):
-    width, height = pygame.display.get_surface().get_size()
+def drawExplored(screen, maze, path, color, cell_size):
     (x, y) = path.getCoordinates()
-    cell = pygame.Rect(x*cell_size[0] + (width - maze.getWidth()*cell_size[0])/2, y*cell_size[1] + (height - maze.getHeight()*cell_size[1])/2 + 90, cell_size[0], cell_size[1])
+    cell = pygame.Rect(x*cell_size[0] + 25, y*cell_size[1] + 80, cell_size[0], cell_size[1])
 
-    pygame.draw.rect(screen, '#bda1cc', cell)
+    pygame.draw.rect(screen, color, cell)
     if (x, y) == maze.getStart() or (x, y) == maze.getEnd():
         pygame.draw.rect(screen, 'red', cell)
     pygame.display.update(cell)
 
-def drawSolve(screen, maze, path, cell_size):
-    width, height = pygame.display.get_surface().get_size()
+def drawSolve(screen, maze, path, color, cell_size):
     (x, y) = path.getCoordinates()
-    cell = pygame.Rect(x*cell_size[0] + (width - maze.getWidth()*cell_size[0])/2, y*cell_size[1] + (height - maze.getHeight()*cell_size[1])/2 + 90, cell_size[0], cell_size[1])
+    cell = pygame.Rect(x*cell_size[0] + 25, y*cell_size[1] + 80, cell_size[0], cell_size[1])
 
-    pygame.draw.rect(screen, '#65c7c1', cell)
+    pygame.draw.rect(screen, color, cell)
     if (x, y) == maze.getStart() or (x, y) == maze.getEnd():
         pygame.draw.rect(screen, 'red', cell)
     pygame.display.update(cell)
+
 
 def drawButton(screen, button):
     font = pygame.font.Font(button.font, button.font_size)
@@ -105,14 +103,17 @@ def drawButton(screen, button):
     pygame.draw.rect(screen, button.color, button.rect)
     screen.blit(button_text, text_rect)
 
-def drawScrollUp(screen, menu_button):
+def drawScrollUp(screen, maze, menu_button, cell_size):
     pygame.draw.rect(screen, 'white', menu_button.rect)
     pygame.display.update(menu_button)
+    paths = maze.paths.copy()
+    for path in paths:
+        drawMaze(screen, maze, path, cell_size)
 
 def drawRunningDot(screen, dot):
     solving = pygame.Rect(1030, 60, 270, 30)
-    solving_text = pygame.font.Font(r'C:\Users\ciltr\Desktop\USTH\Semester 2\Intro to AI\Dijkstra\Github visual\src\Font\Lexend\static\Lexend-Light.ttf', 22).render('Solving:', True, 'black')
-    pygame.draw.rect(screen, 'white', solving)
+    solving_text = pygame.font.Font('./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Solving:', True, 'black')
+    pygame.draw.rect(screen, '#e8f8fa', solving)
     screen.blit(solving_text, (1030, 60))
 
     pygame.draw.rect(screen, 'black', dot)
@@ -124,8 +125,10 @@ def drawRunningDot(screen, dot):
 def getMazeInfo():
     #width and height of maze must be odd and width - height > 10
     maze = GoodMaze(55, 33)
+    maze.setStart(13, 21)
+    maze.setEnd(41, 11)
     maze.randomizeMazeDepthFirst(maze.getStart())
-    maze.setEnvironment()
+    #maze.setEnvironment()
     walls = maze.walls
     paths = maze.paths
     paths.sort(key = lambda x: x.getRank())
@@ -140,34 +143,35 @@ def main():
     button_list = []
     menu_button_list = []
 
+    font_size = 22
     #Create exit button
-    stop_button = Button(40, 40, 80, 60, color = '#27aae1', text = 'Stop', text_color = 'black', font_size = 32)
+    stop_button = Button(40, 40, 80, 60, color = '#27aae1', text = 'Stop', text_color = 'black', font_size = font_size)
     button_list.append(stop_button)
 
     #Create randomaze button
-    randomaze_button = Button(455, 25, 270, 30, color = '#27aae1', text = 'Randomize maze', text_color = 'black', font_size = 32)
+    randomaze_button = Button(455, 25, 270, 30, color = '#27aae1', text = 'Randomize maze', text_color = 'black', font_size = font_size)
     button_list.append(randomaze_button)
 
     #Create menu button------------------------------------------------------------------------------
-    menu_button = Button(745, 25, 270, 30,color = '#27aae1', text = 'Solve maze', text_color = 'black', font_size = 32)
+    menu_button = Button(745, 25, 270, 30,color = '#27aae1', text = 'Solve maze', text_color = 'black', font_size = font_size)
     button_list.append(menu_button)
 
     menu_list = ['A*', 'Dijkstra', 'BFS', 'DFS', 'Greedy']
     menu_item_color = '#27aae1'
     #Create Astar button
-    astar_button = Button(745, 55, 270, 30, color = menu_item_color, text = 'A*', text_color = 'black', font_size = 32)
+    astar_button = Button(745, 55, 270, 30, color = menu_item_color, text = 'A*', text_color = 'black', font_size = font_size)
     menu_button_list.append(astar_button)
     #Create Dijkstra button
-    dijkstra_button = Button(745, 85, 270, 30, color = menu_item_color, text = 'Dijkstra', text_color = 'black', font_size = 32)
+    dijkstra_button = Button(745, 85, 270, 30, color = menu_item_color, text = 'Dijkstra', text_color = 'black', font_size = font_size)
     menu_button_list.append(dijkstra_button)
     #Create BFS button
-    bfs_button = Button(745, 115, 270, 30, color = menu_item_color, text = 'BFS', text_color = 'black', font_size = 32)
+    bfs_button = Button(745, 115, 270, 30, color = menu_item_color, text = 'BFS', text_color = 'black', font_size = font_size)
     menu_button_list.append(bfs_button)
     #Create DFS button
-    dfs_button = Button(745, 145, 270, 30, color = menu_item_color, text = 'DFS', text_color = 'black', font_size = 32)
+    dfs_button = Button(745, 145, 270, 30, color = menu_item_color, text = 'DFS', text_color = 'black', font_size = font_size)
     menu_button_list.append(dfs_button)
     #Create Greedy button
-    greedy_button = Button(745, 175, 270, 30, color = menu_item_color, text = 'Greedy', text_color = 'black', font_size = 32)
+    greedy_button = Button(745, 175, 270, 30, color = menu_item_color, text = 'Greedy', text_color = 'black', font_size = font_size)
     menu_button_list.append(greedy_button)
     menu_copy = menu_button_list.copy()
     #------------------------------------------------------------------------------------------------
@@ -183,6 +187,8 @@ def main():
     solve_list = {}
     best_count = 0
     explored_count = 0
+    explored_color_cycle = ['#f8f5fa', '#bda1cc']
+    best_color_cycle = ['#c0cccb', '#65c7c1']
     
     #Dot list
     running_1_dot_box = pygame.Rect(1115, 73, 10, 10)
@@ -204,11 +210,11 @@ def main():
     draw_dot_event = pygame.USEREVENT + 4
 
     #Init screen
-    width = 1390
-    height = 900
+    width = 1040
+    height = 730
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Pathfinding Visualizer')
-    screen.fill('white')
+    screen.fill('#e8f8fa')
 
     # Our game loop
     press = False
@@ -217,7 +223,7 @@ def main():
         #Get paths and walls
         if draw_maze_surface == True:
             maze = getMazeInfo()
-            
+            maze.setEnvironment()
             paths = maze.paths.copy()
             best_path = []
             explored_path = []
@@ -227,7 +233,7 @@ def main():
             cell_height = maze_surf.get_height()//maze.getHeight()
             cell_size = cell_width, cell_height
             maze_surf.fill('black')
-            screen.blit(maze_surf, ((width - maze.getWidth()*cell_width)/2, (height - maze.getHeight()*cell_height)/2 + 90))
+            screen.blit(maze_surf, (25, 80))
             draw_maze_surface = False
 
 
@@ -250,7 +256,7 @@ def main():
                             if button.text == 'Stop':
                                 draw_maze = False
                                 draw_maze_surface = True
-                                pygame.time.set_timer(draw_maze_event, 0)
+                                #pygame.time.set_timer(draw_maze_event, 0)
                                 pygame.time.set_timer(draw_solve_event, 0)
                                 pygame.time.set_timer(draw_dot_event, 0)
                                 startDraw('maze', draw_maze, draw_maze_event)
@@ -266,14 +272,14 @@ def main():
                     for button in menu_button_list:
                         if button.rect.collidepoint((mouse_x, mouse_y)):
                             done_box = pygame.Rect(1115, 60, 270, 30)
-                            pygame.draw.rect(screen, 'white', done_box)
+                            pygame.draw.rect(screen, '#e8f8fa', done_box)
                             pygame.display.update(done_box)
                             running_text = pygame.font.SysFont('Arial', 22).render('Running: ' + button.text, True, 'black')
                             running_box = pygame.Rect(1030, 25, 270, 30)
-                            pygame.draw.rect(screen, 'white', running_box)
+                            pygame.draw.rect(screen, '#e8f8fa', running_box)
                             screen.blit(running_text, (1030, 25))
                             time_box = pygame.Rect(1030, 90, 270, 30)
-                            pygame.draw.rect(screen, 'white', time_box)
+                            pygame.draw.rect(screen, '#e8f8fa', time_box)
                             pygame.display.update((running_box, time_box))
                                 
                             pygame.time.set_timer(draw_dot_event, 500)
@@ -306,7 +312,7 @@ def main():
                     if draw_menu == 1:
                         drawButton(screen, menu_copy.pop(0))
                     elif draw_menu == 0:
-                        drawScrollUp(screen, menu_copy.pop(-1))
+                        drawScrollUp(screen, maze, menu_copy.pop(-1), cell_size)
                 else:
                     menu_copy = menu_button_list.copy()
                     startDraw('solve', False, draw_menu_event)
@@ -318,24 +324,29 @@ def main():
                 solve_list, algo = solve_result.get()
                 best_path, explored_path, time = solve_list[algo]
                 if explored_count < len(explored_path):
-                    drawExplored(screen, maze, explored_path[explored_count], cell_size)
+                    drawExplored(screen, maze, explored_path[explored_count], explored_color_cycle[0], cell_size)
+                    if explored_count > 0:
+                        drawExplored(screen, maze, explored_path[explored_count - 1], explored_color_cycle[1], cell_size)
                     explored_count += 1
+                    
                 else:
                     if len(best_path) > best_count:
-                        drawSolve(screen, maze, best_path[best_count], cell_size)
+                        drawSolve(screen, maze, best_path[best_count], best_color_cycle[0], cell_size)
+                        if best_count > 0:
+                            drawSolve(screen, maze, best_path[best_count-1], best_color_cycle[1], cell_size)
                         best_count += 1
                     else:
                         startDraw('solve', False, draw_solve_event)
                         pygame.time.set_timer(draw_dot_event, 0)
 
-                        done_text = pygame.font.Font(r'C:\Users\ciltr\Desktop\USTH\Semester 2\Intro to AI\Dijkstra\Github visual\src\Font\Lexend\static\Lexend-Light.ttf', 22).render('Done!', True, 'black')
+                        done_text = pygame.font.Font('./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Done!', True, 'black')
                         done_box = pygame.Rect(1115, 60, 270, 30)
-                        pygame.draw.rect(screen, 'white', done_box)
+                        pygame.draw.rect(screen, '#e8f8fa', done_box)
                         screen.blit(done_text, (1115, 60))
 
-                        time_text = pygame.font.Font(r'C:\Users\ciltr\Desktop\USTH\Semester 2\Intro to AI\Dijkstra\Github visual\src\Font\Lexend\static\Lexend-Light.ttf', 22).render('Time: ' + str(time) + 'milisec', True, 'black')
+                        time_text = pygame.font.Font(r'./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Time: ' + str(time) + 'milisec', True, 'black')
                         time_box = pygame.Rect(1030, 90, 270, 30)
-                        pygame.draw.rect(screen, 'white', time_box)
+                        pygame.draw.rect(screen, '#e8f8fa', time_box)
                         screen.blit(time_text, (1030, 90))
 
                         pygame.display.update((done_box, time_box))
