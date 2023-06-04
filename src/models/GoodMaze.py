@@ -42,8 +42,8 @@ class GoodMaze:
         self.rank = 0
     
     def setEnvironment(self):
-        for x in range(1, self.__width-1):
-            for y in range(1, self.__height-1):
+        for x in range(1, self.__width - 1):
+            for y in range(1, self.__height - 1):
                 if self.__cells[x][y-1].getStatus() == 1:
                     self.__cells[x][y].environment['N'] = 1
                 if self.__cells[x][y+1].getStatus() == 1:
