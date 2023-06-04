@@ -28,22 +28,15 @@ def dfs(maze):
             
         # Find all way to go for current cell and append it to temp list (east, south, north, west respectively)
         temp = []        
-        for direction in sequence:
-            if currentCell.environment[direction] == 0:
-                if direction == "E":
-                    nextCell = maze.eastCell(currentCell)
-                elif direction == "S":
-                    nextCell = maze.southCell(currentCell)
-                elif direction == "N":
-                    nextCell = maze.northCell(currentCell)
-                elif direction == "W":
-                    nextCell = maze.westCell(currentCell)
+        for neighbor in maze.getNeighbors(currentCell):
+            if neighbor.getStatus() == 0:
                 # If cell is explored then continue to the next loop
-                if nextCell in explored:
+                if neighbor in explored:
                     continue
                 # Add each next cell to temp
-                temp.append(nextCell)
-                dfs_path[nextCell] = currentCell
+                temp.append(neighbor)
+
+                dfs_path[neighbor] = currentCell
         # After having a full way of the cell, extend the frontier list by adding the temp to the begin of the frontier        
         temp.extend(frontier)
         frontier = temp.copy()

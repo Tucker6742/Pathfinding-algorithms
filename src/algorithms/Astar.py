@@ -51,7 +51,7 @@ class A_star_search:
         neighbors: list[GoodCell] = []
         x = cell.getCoordinates()[0]
         y = cell.getCoordinates()[1]
-        if x < maze.getWidth() - 2:
+        if x <= maze.getWidth() - 2:
             # right
             if maze.getMaze()[x+1][y].getStatus() == 0:
                 neighbors.append(maze.getMaze()[x+1][y])
@@ -59,7 +59,7 @@ class A_star_search:
             # down
             if maze.getMaze()[x][y-1].getStatus() == 0:
                 neighbors.append(maze.getMaze()[x][y-1])
-        if y < maze.getHeight() - 2:
+        if y <= maze.getHeight() - 2:
             # up
             if maze.getMaze()[x][y+1].getStatus() == 0:
                 neighbors.append(maze.getMaze()[x][y+1])

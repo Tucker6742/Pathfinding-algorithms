@@ -129,7 +129,7 @@ def drawRunningDot(screen, dot):
 def getMazeInfo():
     #width and height of maze must be odd and width - height > 10
     maze = GoodMaze(55, 33)
-    maze.setStart(13, 21)
+    maze.setStart(13, 31)
     maze.setEnd(41, 11)
     maze.randomizeMazeDepthFirst(maze.getStart())
     maze.setEnvironment()
@@ -193,9 +193,9 @@ def main():
     best_color_cycle = ['#c0cccb', '#65c7c1']
     
     #Dot list
-    running_1_dot_box = pygame.Rect(110, 40, 10, 10)
-    running_2_dot_box = pygame.Rect(125, 40, 10, 10)
-    running_3_dot_box = pygame.Rect(140, 40, 10, 10)
+    running_1_dot_box = pygame.Rect(115, 40, 10, 10)
+    running_2_dot_box = pygame.Rect(130, 40, 10, 10)
+    running_3_dot_box = pygame.Rect(145, 40, 10, 10)
     dot_count = 0
     dot_list = [running_1_dot_box, running_2_dot_box, running_3_dot_box]
 
@@ -253,7 +253,7 @@ def main():
                                 maze_surf = pygame.Surface((990, 630))
                                 cell_width = maze_surf.get_width()//maze.getWidth()
                                 cell_height = maze_surf.get_height()//maze.getHeight()
-                                cell_size = cell_width, cell_height
+                                cell_size = cell_width, cell_height 
                                 maze_surf.fill('black')
                                 screen.blit(maze_surf, (25, 52))
                                 startDraw('maze', draw_maze, draw_maze_event)
@@ -270,10 +270,10 @@ def main():
                             done_box = pygame.Rect(1045, 660, 270, 30)
                             pygame.draw.rect(screen, '#e8f8fa', done_box)
                             pygame.display.update(done_box)
-                            running_text = pygame.font.SysFont('Arial', 22).render('Running: ' + button.text, True, 'black')
-                            running_box = pygame.Rect(1030, 25, 270, 30)
+                            running_text = pygame.font.Font('./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Running: ' + button.text, True, 'black')
+                            running_box = pygame.Rect(1045, 292, 270, 30)
                             pygame.draw.rect(screen, '#e8f8fa', running_box)
-                            screen.blit(running_text, (1030, 25))
+                            screen.blit(running_text, (1045, 292))
                             time_box = pygame.Rect(1030, 90, 270, 30)
                             pygame.draw.rect(screen, '#e8f8fa', time_box)
                             pygame.display.update((running_box, time_box))
@@ -340,7 +340,7 @@ def main():
                         pygame.draw.rect(screen, '#e8f8fa', done_box)
                         screen.blit(done_text, (110, 25))
 
-                        time_text = pygame.font.Font(r'./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Runtime: ' + str(time) + 'milisec', True, 'black')
+                        time_text = pygame.font.Font(r'./src/Font/Lexend/static/Lexend-Light.ttf', 22).render('Runtime: ' + str(time) + ' milisec', True, 'black')
                         time_box = pygame.Rect(1045, 660, 210, 30)
                         pygame.draw.rect(screen, '#e8f8fa', time_box)
                         screen.blit(time_text, (1045, 660))

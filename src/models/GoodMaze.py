@@ -78,26 +78,26 @@ class GoodMaze:
     def getMaze(self):
         return self.__cells
 
-    def getNeighbors(self, cell: Cell) -> list[tuple]:
+    def getNeighbors(self, cell: Cell) -> list[Cell]:
         """
         Return neighbors of this cell
         """
         neighbors = []
         (x, y) = cell.getCoordinates()
-        if x < self.__width - 2:
-            if self.__cells[x+1][y].getStatus() == 0:
+        if x <= self.__width - 2:
+            if self.__cells[x+1][y].getStatus() == 0: #East
                 neighbors.append(self.__cells[x+1][y])
 
         if x > 0:
-            if self.__cells[x-1][y].getStatus() == 0:
+            if self.__cells[x-1][y].getStatus() == 0: #South
                 neighbors.append(self.__cells[x-1][y])
 
-        if y < self.__height - 2:
-            if self.__cells[x][y+1].getStatus() == 0:
+        if y <= self.__height - 2:
+            if self.__cells[x][y+1].getStatus() == 0: #North
                 neighbors.append(self.__cells[x][y+1])
 
         if y > 0:
-            if self.__cells[x][y-1].getStatus() == 0:
+            if self.__cells[x][y-1].getStatus() == 0: #West
                 neighbors.append(self.__cells[x][y-1])
 
         return neighbors
@@ -159,7 +159,6 @@ class GoodMaze:
                     self.__cells[x][y].setRank(0)
 
     def randomizeMazeDepthFirst(self, current_coordinate, init=False, create_path=True):
-
         # Initialize the maze
         if init == False:
             for x in range(self.__width):
@@ -205,6 +204,7 @@ class GoodMaze:
             # If there are visitable cells, randomly choose one and create a path
             else:
                 child_coordinate = random.sample(visitable_cells, 1)[0]
+
                 (x_child, y_child) = child_coordinate
                 # Visit the child cell and set the wall between the child cell and the current cell to be normal cell
                 cells[x_child][y_child].setVisited(True)
